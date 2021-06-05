@@ -51,7 +51,6 @@ resource "aws_network_interface" "foo" {
 resource "aws_instance" "foo" {
   ami = "ami-0d5eff06f840b45e9"
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.my_subnet.id
   network_interface {
     network_interface_id = aws_network_interface.foo.id
     device_index = 0
