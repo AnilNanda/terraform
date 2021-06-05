@@ -121,8 +121,8 @@ resource "aws_network_interface" "web-interface" {
 resource "aws_instance" "web-server" {
   ami = "ami-0d5eff06f840b45e9"
   instance_type = "t2.micro"
-  key_name = figopaul587
-  availability_zone = us-east-1a
+  key_name = "figopaul587"
+  availability_zone = "us-east-1a"
   network_interface {
     network_interface_id = aws_network_interface.web-interface.id
     device_index = 0
