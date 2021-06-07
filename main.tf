@@ -1,6 +1,13 @@
 provider "aws" {
   region = "us-east-1"
 }
+terraform {
+  backend "s3" {
+    bucket = "figopaul-terraform-out"
+    key = "terraform.tfstate"
+    region = "us-east-1"
+  }
+}
 
 #Create VPC
 resource "aws_vpc" "dev-vpc" {
@@ -127,4 +134,5 @@ resource "aws_instance" "web-server" {
     network_interface_id = aws_network_interface.web-interface.id
     device_index = 0
   }
+  depends_on = [aws_eip.web-eip]
 }
