@@ -134,5 +134,8 @@ resource "aws_instance" "web-server" {
     network_interface_id = aws_network_interface.web-interface.id
     device_index = 0
   }
+  tags = {
+    Name = "webserver"
+  }
   depends_on = [aws_eip.web-eip]
 }
