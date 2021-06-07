@@ -1,12 +1,23 @@
 provider "aws" {
   region = "us-east-1"
+  access_key = "AKIAWKT2WXULU4ZQVUMA"
+  secret_key = "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"
 }
 terraform {
   backend "s3" {
     bucket = "figopaul-terraform-out"
     key = "terraform.tfstate"
     region = "us-east-1"
+    access_key = "AKIAWKT2WXULU4ZQVUMA"
+    secret_key = "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"
   }
+}
+
+#Define variable
+variable "ami_id" {
+  description = "AMI id of webserver ec2"
+  default = "ami-0d5eff06f840b45e9"
+  type = string
 }
 
 #Create VPC
@@ -126,7 +137,7 @@ resource "aws_network_interface" "web-interface" {
 }
 
 resource "aws_instance" "web-server" {
-  ami = "ami-0d5eff06f840b45e9"
+  ami = var.ami_id
   instance_type = "t2.micro"
   key_name = "figopaul587"
   availability_zone = "us-east-1a"
@@ -138,4 +149,8 @@ resource "aws_instance" "web-server" {
     Name = "webserver"
   }
   depends_on = [aws_eip.web-eip]
+}
+
+output "ec2_public_ip" {
+  value = aws_eip.web-eip.public_ip
 }
