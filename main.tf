@@ -6,8 +6,6 @@ terraform {
     bucket = "figopaul-terraform-out"
     key = "terraform.tfstate"
     region = "us-east-1"
-    access_key = "AKIAWKT2WXULU4ZQVUMA"
-    secret_key = "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"
   }
 }
 
