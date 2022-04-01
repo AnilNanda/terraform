@@ -1,31 +1,3 @@
-provider "aws" {
-  region  = "us-east-1"
-  profile = "default"
-  alias   = "virginia"
-}
-
-provider "aws" {
-  region  = "eu-central-1"
-  profile = "default"
-  alias   = "frankfurt"
-}
-
-terraform {
-  backend "s3" {
-    bucket  = "figopaul-terraform-out"
-    key     = "terraform.tfstate"
-    region  = "us-east-1"
-    profile = "default"
-  }
-}
-
-#Define variable
-variable "ami_id" {
-  description = "AMI id of webserver ec2"
-  default     = "ami-0d5eff06f840b45e9"
-  type        = string
-}
-
 #Define locals
 locals {
   project_name = "fastapi"
@@ -187,8 +159,4 @@ module "vpc" {
     Terraform = "true"
     Environment = "dev"
   }
-}
-
-output "ec2_public_ip" {
-  value = aws_instance.web-server.public_ip
 }
