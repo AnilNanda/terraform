@@ -1,12 +1,12 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "anilnanda"
+#   backend "remote" {
+#     hostname     = "app.terraform.io"
+#     organization = "anilnanda"
 
-    workspaces {
-      name = "dev"
-    }
-  }
+#     workspaces {
+#       name = "dev"
+#     }
+#   }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -31,6 +31,30 @@ resource "aws_instance" "web" {
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   user_data              = data.template_file.user_data.rendered
+  # provisioner "local-exec" {
+  #       command = "echo ${self.private_ip} >> private_ip.txt"
+  #}
+  provisioner "file" {
+      content = "config content"
+      destination = "/home/ec2-user/config"
+      connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/home/anil/Documents/terraform")
+      host        = self.public_ip
+    }
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'hello world' >> /home/ec2-user/hello.txt"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/home/anil/Documents/terraform")
+      host        = self.public_ip
+    }
+  }
   tags = {
     Name = "webserver"
   }
