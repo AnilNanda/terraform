@@ -1,12 +1,12 @@
 terraform {
-#   backend "remote" {
-#     hostname     = "app.terraform.io"
-#     organization = "anilnanda"
+  #   backend "remote" {
+  #     hostname     = "app.terraform.io"
+  #     organization = "anilnanda"
 
-#     workspaces {
-#       name = "dev"
-#     }
-#   }
+  #     workspaces {
+  #       name = "dev"
+  #     }
+  #   }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -35,9 +35,9 @@ resource "aws_instance" "web" {
   #       command = "echo ${self.private_ip} >> private_ip.txt"
   #}
   provisioner "file" {
-      content = "config content"
-      destination = "/home/ec2-user/config"
-      connection {
+    content     = "config content"
+    destination = "/home/ec2-user/config"
+    connection {
       type        = "ssh"
       user        = "ec2-user"
       private_key = file("/home/anil/Documents/terraform")
@@ -103,6 +103,16 @@ resource "aws_security_group" "allow_tls" {
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIt4bNFgChOdk78YbuWY8nvVhmQCFa3P19ZPksPRNCJ2Kv4P4SydvBPpfkuNOhfEUJzywnsI/eCtgEqXru6G4JVRYq1RZLP2+fvrfDHC7OWUNnZHacFe2NBxRW9ivallWdwQfIfGN9Q/R3hXjWOYDSXqnHXfOx9N1D/gD7HNcF63vtJEsd0ntV8MAxJcZJWGrB6MPNWCC2gcb3FGMZsZQQOat4oTzWZ1so8+gnB1iVwTe2VJ/9Bl2y/3oeKMxdsTn7vlFlJtFElqcIj2Z725ED4W1cnk0FpHkEMLunINDEOOuzyZbtV/8+EvDHyFgflJ2AHjBO3C1bHlty+62veO6VUMF+AGAms2sQ+ModDQ6Vdvm+4u0jhN2p1l6eX0mJES6TYPpYEZlRBdm3y73GpZiKmz22xrbm0vLNVUw5o+94VS17pznKbO1eTxULqTkrxSZF34WV0CsBPpxXNF220AzHJrWI1SKe5ORIhWv47ySI6Nr1WInmc65ZiEmUpkq4QUE= anil@example.com"
+}
+
+resource "null_resource" "status" {
+  provisioner "local-exec" {
+    command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.web[0].id}"
+
+  }
+  depends_on = [
+    aws_instance.web[0]
+  ]
 }
 
 output "public_ip" {
