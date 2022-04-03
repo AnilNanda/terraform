@@ -20,6 +20,17 @@ provider "aws" {
   alias  = "us"
 }
 
+variable "instance_type" {
+  type = string
+  description = "AWS EC2 instance type"
+  sensitive = true
+  default = "t2.micro"
+  validation {
+      condition = can(regex("^t2.",var.instance_type))
+      error_message = "Instance type should be t2."
+  }
+}
+
 data "template_file" "user_data" {
   template = file("./userdata.yml")
 }
@@ -27,7 +38,7 @@ data "template_file" "user_data" {
 resource "aws_instance" "web" {
   count                  = 1
   ami                    = "ami-0d5eff06f840b45e9"
-  instance_type          = "t2.micro"
+  instance_type          = var.instance_type
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   user_data              = data.template_file.user_data.rendered
