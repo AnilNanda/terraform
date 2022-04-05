@@ -1,0 +1,8 @@
+"hello ${var.name}"
+"hello %{if var.name != "world "}mars%{else}var.name%{endif}"
+{for w in var.world: w=>upper(w)}
+[for k,v in var.tree: length(k)+length(v)]
+[for s in var.world: upper(s) if s!="a"]
+[for i,v in var.world: "${i} is ${v}"]
+[for x in var.world_splat: x.a]
+[var.world_splat[*].a]
